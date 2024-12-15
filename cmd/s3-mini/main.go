@@ -1,6 +1,8 @@
 package main
 
 import (
+	"github.com/aziret/s3-mini/internal/adapters/repository/file"
+	"github.com/aziret/s3-mini/internal/lib/logger/sl"
 	"github.com/joho/godotenv"
 	"log/slog"
 	"os"
@@ -13,9 +15,22 @@ const (
 )
 
 func main() {
-	env := os.Getenv("ENV")
-	log := setupLogger(env)
+	var (
+		env         = os.Getenv("ENV")
+		storagePath = os.Getenv("STORAGE_PATH")
+		log         = setupLogger(env)
+	)
+
 	log.Debug("debug messages enables")
+
+	repo, err := file.NewRepository(storagePath)
+
+	if err != nil {
+		log.Error("failed to initialize storage", sl.Err(err))
+		os.Exit(1)
+	}
+
+	_ = repo
 }
 
 func setupLogger(env string) *slog.Logger {
