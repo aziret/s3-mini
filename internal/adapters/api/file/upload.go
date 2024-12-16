@@ -13,7 +13,7 @@ func (impl *Implementation) ListenUpdates(_ context.Context) {
 	)
 	go func() {
 		for {
-			event := <-impl.handler.CompleteUploads
+			event := <-impl.Handler.CompleteUploads
 
 			log.Info("Upload finished", slog.Attr{Key: "ID", Value: slog.StringValue(event.Upload.ID)})
 		}

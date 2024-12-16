@@ -1,10 +1,8 @@
 package file
 
 import (
-	"github.com/aziret/s3-mini/internal/service"
-	"net/http"
-
 	"github.com/aziret/s3-mini/internal/lib/logger/sl"
+	"github.com/aziret/s3-mini/internal/service"
 	"github.com/tus/tusd/v2/pkg/filelocker"
 	"github.com/tus/tusd/v2/pkg/filestore"
 	tusd "github.com/tus/tusd/v2/pkg/handler"
@@ -13,7 +11,7 @@ import (
 )
 
 type Implementation struct {
-	handler     *tusd.Handler
+	Handler     *tusd.Handler
 	fileService service.FileService
 	logger      *slog.Logger
 }
@@ -39,15 +37,8 @@ func NewImplementation(logger *slog.Logger, fileService service.FileService) *Im
 		log.Error("unable to create handler: %s", sl.Err(err))
 	}
 
-	http.Handle("/files/", http.StripPrefix("/files/", handler))
-	http.Handle("/files", http.StripPrefix("/files", handler))
-	err = http.ListenAndServe(":8080", nil)
-	if err != nil {
-		log.Error("unable to listen: %s", sl.Err(err))
-	}
-
 	return &Implementation{
-		handler:     handler,
+		Handler:     handler,
 		logger:      logger,
 		fileService: fileService,
 	}

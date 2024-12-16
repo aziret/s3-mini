@@ -2,8 +2,11 @@ package app
 
 import (
 	"context"
+	"fmt"
 	"github.com/aziret/s3-mini/internal/config"
+	"github.com/aziret/s3-mini/internal/lib/logger/sl"
 	"log/slog"
+	"net/http"
 )
 
 type App struct {
@@ -26,6 +29,7 @@ func (a *App) initDeps(ctx context.Context) error {
 	inits := []func(context.Context) error{
 		a.initConfig,
 		a.initServiceProvider,
+		a.initHTTPServer,
 	}
 
 	for _, f := range inits {
@@ -49,5 +53,34 @@ func (a *App) initConfig(_ context.Context) error {
 
 func (a *App) initServiceProvider(_ context.Context) error {
 	a.serviceProvider = newServiceProvider()
+	return nil
+}
+
+func (a *App) initHTTPServer(ctx context.Context) error {
+	impl := a.serviceProvider.FileImpl()
+
+	http.Handle("/files/", http.StripPrefix("/files/", impl.Handler))
+	http.Handle("/files", http.StripPrefix("/files", impl.Handler))
+
+	return nil
+}
+
+func (a *App) runHTTPServer(ctx context.Context) error {
+	const op = "app.runHTTPServer"
+
+	impl := a.serviceProvider.FileImpl()
+	log := a.serviceProvider.Logger()
+
+	logger := log.With(
+		slog.String("op", op),
+	)
+
+	err := http.ListenAndServe(":8080", impl.Handler)
+	if err != nil {
+		logger.Error("unable to listen: %s", sl.Err(err))
+
+		return fmt.Errorf("%s: %w", op, err)
+	}
+
 	return nil
 }
