@@ -1,7 +1,11 @@
 package file
 
 import (
+	"context"
 	"net/http"
+
+	"github.com/aziret/s3-mini/internal/lib/logger/sl"
+	"github.com/aziret/s3-mini/internal/model"
 
 	"github.com/tus/tusd/v2/pkg/filelocker"
 	"github.com/tus/tusd/v2/pkg/filestore"
@@ -10,11 +14,21 @@ import (
 	"log/slog"
 )
 
-type Implementation struct {
-	handler *tusd.Handler
+type FileService interface {
+	Save(ctx context.Context, info *model.FileInfo) (*model.File, error)
 }
 
-func NewImplementation(logger *slog.Logger) *Implementation {
+type Implementation struct {
+	handler     *tusd.Handler
+	fileService FileService
+	logger      *slog.Logger
+}
+
+func NewImplementation(logger *slog.Logger, fileService FileService) *Implementation {
+	const op = "api.file.New"
+	log := logger.With(
+		slog.String("op", op),
+	)
 
 	store := filestore.New("./uploads")
 	locker := filelocker.New("./uploads")
@@ -28,24 +42,19 @@ func NewImplementation(logger *slog.Logger) *Implementation {
 		NotifyCompleteUploads: true,
 	})
 	if err != nil {
-		logger.Error("unable to create handler: %s", err)
+		log.Error("unable to create handler: %s", sl.Err(err))
 	}
-
-	go func() {
-		for {
-			event := <-handler.CompleteUploads
-			logger.Info("Upload %s finished\n", event.Upload.ID)
-		}
-	}()
 
 	http.Handle("/files/", http.StripPrefix("/files/", handler))
 	http.Handle("/files", http.StripPrefix("/files", handler))
 	err = http.ListenAndServe(":8080", nil)
 	if err != nil {
-		logger.Error("unable to listen: %s", err)
+		log.Error("unable to listen: %s", sl.Err(err))
 	}
 
 	return &Implementation{
-		handler: handler,
+		handler:     handler,
+		logger:      logger,
+		fileService: fileService,
 	}
 }
