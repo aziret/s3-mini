@@ -1,12 +1,10 @@
 package file
 
 import (
-	"context"
+	"github.com/aziret/s3-mini/internal/service"
 	"net/http"
 
 	"github.com/aziret/s3-mini/internal/lib/logger/sl"
-	"github.com/aziret/s3-mini/internal/model"
-
 	"github.com/tus/tusd/v2/pkg/filelocker"
 	"github.com/tus/tusd/v2/pkg/filestore"
 	tusd "github.com/tus/tusd/v2/pkg/handler"
@@ -14,17 +12,13 @@ import (
 	"log/slog"
 )
 
-type FileService interface {
-	Save(ctx context.Context, info *model.FileInfo) (*model.File, error)
-}
-
 type Implementation struct {
 	handler     *tusd.Handler
-	fileService FileService
+	fileService service.FileService
 	logger      *slog.Logger
 }
 
-func NewImplementation(logger *slog.Logger, fileService FileService) *Implementation {
+func NewImplementation(logger *slog.Logger, fileService service.FileService) *Implementation {
 	const op = "api.file.New"
 	log := logger.With(
 		slog.String("op", op),
