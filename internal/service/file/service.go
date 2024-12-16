@@ -10,8 +10,9 @@ type Service struct {
 	fileRepo repository.FileRepository
 }
 
-func NewService(fileRepo repository.FileRepository) *Service {
+func NewService(fileRepo repository.FileRepository, logger *slog.Logger) *Service {
 	return &Service{
 		fileRepo: fileRepo,
+		logger:   logger,
 	}
 }

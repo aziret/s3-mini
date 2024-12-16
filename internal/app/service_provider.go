@@ -8,6 +8,7 @@ import (
 	"log/slog"
 
 	fileRepository "github.com/aziret/s3-mini/internal/adapters/repository/file"
+	fileService "github.com/aziret/s3-mini/internal/service/file"
 )
 
 type serviceProvider struct {
@@ -40,4 +41,20 @@ func (s *serviceProvider) FileRepo() repository.FileRepository {
 	}
 
 	return s.fileRepo
+}
+
+func (s *serviceProvider) FileService() service.FileService {
+	if s.fileService == nil {
+		s.fileService = fileService.NewService(s.FileRepo(), s.log)
+	}
+
+	return s.fileService
+}
+
+func (s *serviceProvider) FileImpl() *file.Implementation {
+	if s.fileImpl == nil {
+		s.fileImpl = file.NewImplementation(s.log, s.FileService())
+	}
+
+	return s.fileImpl
 }
