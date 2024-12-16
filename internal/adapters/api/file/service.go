@@ -11,6 +11,7 @@ import (
 )
 
 type Implementation struct {
+	handler *tusd.Handler
 }
 
 func NewImplementation(logger *slog.Logger) *Implementation {
@@ -44,5 +45,7 @@ func NewImplementation(logger *slog.Logger) *Implementation {
 		logger.Error("unable to listen: %s", err)
 	}
 
-	return &Implementation{}
+	return &Implementation{
+		handler: handler,
+	}
 }

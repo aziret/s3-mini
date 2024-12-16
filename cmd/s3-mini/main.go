@@ -1,11 +1,12 @@
 package main
 
 import (
+	"log/slog"
+	"os"
+
 	"github.com/aziret/s3-mini/internal/adapters/repository/file"
 	"github.com/aziret/s3-mini/internal/lib/logger/sl"
 	"github.com/joho/godotenv"
-	"log/slog"
-	"os"
 )
 
 const (
@@ -31,6 +32,7 @@ func main() {
 	}
 
 	_ = repo
+
 }
 
 func setupLogger(env string) *slog.Logger {
