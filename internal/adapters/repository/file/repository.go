@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"fmt"
 	"log/slog"
+	"os"
 
 	repoPackage "github.com/aziret/s3-mini/internal/adapters/repository"
 	"github.com/aziret/s3-mini/internal/lib/logger/sl"
@@ -18,12 +19,14 @@ type repository struct {
 	log *slog.Logger
 }
 
-func NewRepository(storagePath string, log *slog.Logger) (*repository, error) {
+func NewRepository(log *slog.Logger) (*repository, error) {
 	const op = "repository.file.NewRepository"
 
 	logger := log.With(
 		slog.String("op", op),
 	)
+
+	storagePath := os.Getenv("STORAGE_PATH")
 
 	db, err := sql.Open("sqlite3", storagePath)
 	if err != nil {
