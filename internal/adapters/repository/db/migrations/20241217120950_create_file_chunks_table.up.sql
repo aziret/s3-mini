@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS file_chunks(
-    uuid TEXT PRIMARY KEY,
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     file_id INTEGER NOT NULL,
     chunk_size INTEGER NOT NULL,
     chunk_number INTEGER NOT NULL,

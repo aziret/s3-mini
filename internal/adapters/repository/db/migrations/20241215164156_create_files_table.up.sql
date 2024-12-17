@@ -3,6 +3,7 @@ CREATE TABLE IF NOT EXISTS files(
   name TEXT NOT NULL,
   file_path TEXT,
   upload_id TEXT NOT NULL UNIQUE,
+  chunk_size INTEGER NOT NULL,
   "offset" BIGINT,
   filetype TEXT,
     ready_to_download BOOLEAN NOT NULL DEFAULT FALSE,
