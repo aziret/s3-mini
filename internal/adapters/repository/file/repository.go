@@ -48,7 +48,7 @@ func (repo *repository) Create(ctx context.Context, info *model.FileInfo) (int64
 		slog.String("op", op),
 	)
 
-	stmt, err := repo.db.Prepare("INSERT INTO files(name, file_path, upload_id, offset, filetype) VALUES(?, ?)")
+	stmt, err := repo.db.Prepare("INSERT INTO files(name, file_path, upload_id, offset, filetype) VALUES(?, ?, ?, ?, ?)")
 	if err != nil {
 		log.Error("failed to prepare statement", sl.Err(err))
 		return 0, fmt.Errorf("%s: %w", op, err)
