@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package file_v1;
+
+option go_package = "github.com/aziret/s3-mini/pkg/filetransfer_v1";
+
+service FileTransferServiceV1 {
+  rpc UploadFile(stream FileChunk) returns (UploadStatus);
+  rpc DownloadFile(FileChunkRequest) returns (stream FileChunk);
+}
+
+message FileChunk {
+  string uuid = 1;
+  bytes data = 2;
+}
+
+message UploadStatus {
+  bool success = 1;
+  string message = 2;
+}
+
+message FileChunkRequest {
+  string uuid = 1;
+}
