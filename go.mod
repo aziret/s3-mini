@@ -5,7 +5,7 @@ go 1.22.3
 require (
 	github.com/golang-migrate/migrate/v4 v4.18.1
 	github.com/joho/godotenv v1.5.1
-	github.com/mattn/go-sqlite3 v1.14.24
+	github.com/lib/pq v1.10.9
 	github.com/tus/tusd/v2 v2.6.0
 	google.golang.org/grpc v1.67.1
 	google.golang.org/protobuf v1.35.1
