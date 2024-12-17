@@ -60,20 +60,20 @@ func connectionString() string {
 	return fmt.Sprintf("user=%s password=%s dbname=%s host=%s port=%s sslmode=%s", pgUser, pgPass, pgDB, pgHost, pgPort, pgSSLMode)
 }
 
-func (repo *repository) Create(ctx context.Context, info *model.FileInfo) (int64, error) {
+func (repo *repository) Create(ctx context.Context, file *model.File) (int64, error) {
 	const op = "repository.file.Create"
 
 	log := repo.log.With(
 		slog.String("op", op),
 	)
 
-	stmt, err := repo.db.Prepare("INSERT INTO files(name, file_path, upload_id, \"offset\", filetype) VALUES($1, $2, $3, $4, $5)")
+	stmt, err := repo.db.Prepare("INSERT INTO files(name, file_path, upload_id, \"offset\", filetype, size) VALUES($1, $2, $3, $4, $5, $6)")
 	if err != nil {
 		log.Error("failed to prepare statement", sl.Err(err))
 		return 0, fmt.Errorf("%s: %w", op, err)
 	}
 
-	res, err := stmt.Exec(info.MetaData["filename"], info.Storage["Path"], info.ID, info.Offset, info.MetaData["filetype"])
+	res, err := stmt.Exec(file.Name, file.FilePath, file.UploadID, file.Offset, file.FileType, file.Size)
 	if err != nil {
 		if pqErr, ok := err.(*pq.Error); ok && pqErr.Code.Name() == "unique_violation" {
 			return 0, fmt.Errorf("%s: %w", op, repoPackage.ErrUploadExists)
@@ -81,7 +81,6 @@ func (repo *repository) Create(ctx context.Context, info *model.FileInfo) (int64
 
 		return 0, fmt.Errorf("%s: %w", op, err)
 	}
-	_ = res
 
-	return 0, nil
+	return res.LastInsertId()
 }

@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	"errors"
+
 	"github.com/aziret/s3-mini/internal/model"
 )
 
@@ -12,5 +13,5 @@ var (
 )
 
 type FileRepository interface {
-	Create(ctx context.Context, info *model.FileInfo) (int64, error)
+	Create(ctx context.Context, info *model.File) (int64, error)
 }
