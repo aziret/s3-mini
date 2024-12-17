@@ -22,7 +22,7 @@ func (impl *Implementation) ListenUpdates(ctx context.Context) {
 
 			log.Info("Upload finished", slog.Attr{Key: "ID", Value: slog.StringValue(event.Upload.ID)})
 
-			_, err := impl.fileService.Save(ctx, converter.ToFileInfoFromApi(&event.Upload))
+			_, err := impl.fileService.Save(ctx, converter.ToFileFromApi(&event.Upload))
 
 			if err != nil {
 				if errors.Is(err, repository.ErrUploadExists) {
