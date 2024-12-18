@@ -7,6 +7,7 @@ option go_package = "github.com/aziret/s3-mini/pkg/filetransfer_v1";
 service FileTransferServiceV1 {
   rpc UploadFile(stream FileChunk) returns (UploadStatus);
   rpc DownloadFile(FileChunkRequest) returns (stream FileChunk);
+  rpc RegisterClient(PingRequest) returns (PongResponse);
 }
 
 message FileChunk {
@@ -21,4 +22,13 @@ message UploadStatus {
 
 message FileChunkRequest {
   string uuid = 1;
+}
+
+message PingRequest {
+  string uuid = 1;
+}
+
+message PongResponse {
+  bool success = 1;
+  string message = 2;
 }
