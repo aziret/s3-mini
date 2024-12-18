@@ -12,7 +12,6 @@ import (
 
 type App struct {
 	serviceProvider *serviceProvider
-	logger          *slog.Logger
 }
 
 func NewApp(ctx context.Context) (*App, error) {
@@ -27,6 +26,8 @@ func NewApp(ctx context.Context) (*App, error) {
 }
 
 func (a *App) Run() error {
+	a.serviceProvider.CronTask().Run()
+
 	return a.runHTTPServer()
 }
 

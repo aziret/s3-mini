@@ -2,14 +2,14 @@ package file
 
 import (
 	"context"
-	"fmt"
 	"log/slog"
 
 	"github.com/aziret/s3-mini/internal/lib/logger/sl"
 	"github.com/aziret/s3-mini/internal/model"
 )
 
-func (s *Service) CreateFileChunks(ctx context.Context) error {
+func (s *Service) CreateFileChunks() {
+	ctx := context.Background()
 	const op = "service.file.CreateFileChunks"
 
 	log := s.logger.With(
@@ -20,19 +20,14 @@ func (s *Service) CreateFileChunks(ctx context.Context) error {
 
 	if err != nil {
 		log.Error("failed to get files without chunks", sl.Err(err))
-
-		return fmt.Errorf("%s: %w", op, err)
 	}
 
 	for _, fileWC := range *filesWithoutChunks {
 		err := s.createFileChunksForSpecificFile(ctx, fileWC)
 		if err != nil {
 			log.Error("failed to create file chunks", sl.Err(err))
-
-			return fmt.Errorf("%s: %w", op, err)
 		}
 	}
-	return nil
 }
 
 func (s *Service) getFilesWithoutChunks(ctx context.Context) (*[]model.File, error) {
