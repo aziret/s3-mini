@@ -35,6 +35,7 @@ func (a *App) initDeps(ctx context.Context) error {
 		a.initConfig,
 		a.initServiceProvider,
 		a.initHTTPServer,
+		a.initCronTask,
 	}
 
 	for _, f := range inits {
@@ -69,6 +70,16 @@ func (a *App) initHTTPServer(ctx context.Context) error {
 
 	// TODO: run this somewhere else
 	impl.ListenUpdates(ctx)
+	return nil
+}
+
+func (a *App) initCronTask(_ context.Context) error {
+	a.serviceProvider.CronTask()
+	return nil
+}
+
+func (a *App) runCronTask() error {
+	a.serviceProvider.CronTask().Run()
 	return nil
 }
 

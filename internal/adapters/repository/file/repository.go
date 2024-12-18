@@ -73,7 +73,7 @@ func (repo *repository) Create(ctx context.Context, file *model.File) (int64, er
 		return 0, fmt.Errorf("%s: %w", op, err)
 	}
 
-	res, err := stmt.Exec(file.Name, file.FilePath, file.UploadID, file.Offset, file.FileType, file.Size)
+	_, err = stmt.Exec(file.Name, file.FilePath, file.UploadID, file.Offset, file.FileType, file.Size)
 	if err != nil {
 		if pqErr, ok := err.(*pq.Error); ok && pqErr.Code.Name() == "unique_violation" {
 			return 0, fmt.Errorf("%s: %w", op, repoPackage.ErrUploadExists)
@@ -82,5 +82,5 @@ func (repo *repository) Create(ctx context.Context, file *model.File) (int64, er
 		return 0, fmt.Errorf("%s: %w", op, err)
 	}
 
-	return res.LastInsertId()
+	return 0, nil
 }
