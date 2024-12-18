@@ -38,7 +38,7 @@ func (repo *repository) getFilesByChunksCreatedField(_ context.Context, file_chu
 	for rows.Next() {
 		var file model.File
 
-		err := rows.Scan(&file.ID, &file.Name, &file.FilePath, &file.UploadID, &file.FileType, &file.Size)
+		err := rows.Scan(&file.ID, &file.Name, &file.FilePath, &file.UploadID, &file.Offset, &file.FileType, &file.Size)
 		if err != nil {
 			log.Error("failed to scan file row", sl.Err(err))
 			return nil, fmt.Errorf("%s: %w", op, err)

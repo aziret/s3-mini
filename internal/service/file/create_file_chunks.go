@@ -27,7 +27,17 @@ func (s *Service) CreateFileChunks() {
 		if err != nil {
 			log.Error("failed to create file chunks", sl.Err(err))
 		}
+
+		if err != nil {
+			continue
+		}
+
+		err = s.markFileChunksCreated(ctx, fileWC.ID)
+		if err != nil {
+			log.Error("failed to mark file as chunks created", sl.Err(err))
+		}
 	}
+
 }
 
 func (s *Service) getFilesWithoutChunks(ctx context.Context) (*[]model.File, error) {
@@ -36,4 +46,8 @@ func (s *Service) getFilesWithoutChunks(ctx context.Context) (*[]model.File, err
 
 func (s *Service) createFileChunksForSpecificFile(ctx context.Context, file model.File) error {
 	return s.fileRepo.CreateFileChunksForFile(ctx, &file)
+}
+
+func (s *Service) markFileChunksCreated(ctx context.Context, fileID int64) error {
+	return s.fileRepo.MarkFileChunksCreated(ctx, fileID)
 }
