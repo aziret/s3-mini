@@ -8,4 +8,5 @@ import (
 
 type FileService interface {
 	Save(ctx context.Context, info *model.File) (*model.File, error)
+	CreateFileChunks()
 }

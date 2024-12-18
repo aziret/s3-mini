@@ -1,12 +1,14 @@
 package app
 
 import (
+	"log/slog"
+
 	"github.com/aziret/s3-mini/internal/adapters/api/file"
+	"github.com/aziret/s3-mini/internal/adapters/infra/crontask"
 	"github.com/aziret/s3-mini/internal/adapters/repository"
 	"github.com/aziret/s3-mini/internal/config"
 	"github.com/aziret/s3-mini/internal/lib/logger/sl"
 	"github.com/aziret/s3-mini/internal/service"
-	"log/slog"
 
 	fileRepository "github.com/aziret/s3-mini/internal/adapters/repository/file"
 	fileService "github.com/aziret/s3-mini/internal/service/file"
@@ -17,6 +19,7 @@ type serviceProvider struct {
 	fileRepo    repository.FileRepository
 	fileService service.FileService
 	fileImpl    *file.Implementation
+	cronTask    *crontask.CronTask
 }
 
 func newServiceProvider() *serviceProvider {
@@ -66,4 +69,11 @@ func (s *serviceProvider) FileImpl() *file.Implementation {
 	}
 
 	return s.fileImpl
+}
+
+func (s *serviceProvider) CronTask() *crontask.CronTask {
+	if s.cronTask == nil {
+		s.cronTask = crontask.NewCronTask(s.FileService(), s.Logger())
+	}
+	return s.cronTask
 }
