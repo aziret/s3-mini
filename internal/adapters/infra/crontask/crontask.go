@@ -23,4 +23,5 @@ func NewCronTask(fileService service.FileService, logger *slog.Logger) *CronTask
 
 func (task *CronTask) Run() {
 	task.cron.AddFunc("1-59/5 * * * *", task.fileService.CreateFileChunks)
+	task.cron.Start()
 }

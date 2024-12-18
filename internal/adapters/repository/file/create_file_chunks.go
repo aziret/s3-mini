@@ -35,7 +35,7 @@ func (repo *repository) CreateFileChunksForFile(_ context.Context, file *model.F
         VALUES %s
         ON CONFLICT (file_id, chunk_number)
         DO UPDATE SET 
-            chunk_size = EXCLUDED.chunk_size,
+            chunk_size = EXCLUDED.chunk_size
 	`, valuesPlaceholder(chunksNumber))
 
 	_, err := repo.db.Exec(query, *fileChunkValues(file.ID, chunkSize, chunksNumber)...)
