@@ -3,7 +3,7 @@ package service
 import (
 	"context"
 
-	"github.com/aziret/s3-mini/internal/model"
+	"github.com/aziret/s3-mini-internal/internal/model"
 )
 
 type FileService interface {

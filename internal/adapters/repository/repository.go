@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 
-	"github.com/aziret/s3-mini/internal/model"
+	"github.com/aziret/s3-mini-internal/internal/model"
 )
 
 var (

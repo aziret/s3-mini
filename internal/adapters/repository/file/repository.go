@@ -7,11 +7,11 @@ import (
 	"log/slog"
 	"os"
 
-	repoPackage "github.com/aziret/s3-mini/internal/adapters/repository"
-	"github.com/aziret/s3-mini/internal/lib/logger/sl"
+	repoPackage "github.com/aziret/s3-mini-internal/internal/adapters/repository"
+	"github.com/aziret/s3-mini-internal/internal/lib/logger/sl"
 	"github.com/lib/pq"
 
-	"github.com/aziret/s3-mini/internal/model"
+	"github.com/aziret/s3-mini-internal/internal/model"
 )
 
 type repository struct {

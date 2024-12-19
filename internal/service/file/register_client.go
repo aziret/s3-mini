@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"log/slog"
 
-	"github.com/aziret/s3-mini/internal/adapters/repository"
-	"github.com/aziret/s3-mini/internal/model"
+	"github.com/aziret/s3-mini-internal/internal/adapters/repository"
+	"github.com/aziret/s3-mini-internal/internal/model"
 )
 
 func (s *Service) RegisterClient(ctx context.Context, server *model.Server) error {

@@ -1,4 +1,4 @@
-module github.com/aziret/s3-mini
+module github.com/aziret/s3-mini-internal
 
 go 1.22.3
 
