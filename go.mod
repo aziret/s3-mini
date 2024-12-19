@@ -6,6 +6,7 @@ require (
 	github.com/golang-migrate/migrate/v4 v4.18.1
 	github.com/joho/godotenv v1.5.1
 	github.com/lib/pq v1.10.9
+	github.com/pkg/errors v0.9.1
 	github.com/robfig/cron/v3 v3.0.1
 	github.com/tus/tusd/v2 v2.6.0
 	google.golang.org/grpc v1.67.1
