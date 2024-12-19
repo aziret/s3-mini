@@ -3,7 +3,8 @@ CREATE TABLE IF NOT EXISTS file_chunks(
     file_id INTEGER NOT NULL,
     chunk_size INTEGER NOT NULL,
     chunk_number INTEGER NOT NULL,
-    download_completed BOOLEAN NOT NULL DEFAULT FALSE
+    download_completed BOOLEAN NOT NULL DEFAULT FALSE,
+    FOREIGN KEY (file_id) REFERENCES files (id)
 );
 
 CREATE INDEX IF NOT EXISTS idx_file_chunk_file_id ON file_chunks(file_id);
