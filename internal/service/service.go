@@ -7,7 +7,7 @@ import (
 )
 
 type FileService interface {
-	Save(ctx context.Context, info *model.File) (*model.File, error)
+	Save(ctx context.Context, file *model.File) (*model.File, error)
 	CreateFileChunks()
 	RegisterClient(ctx context.Context, server *model.Server) error
 }

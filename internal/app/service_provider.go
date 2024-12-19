@@ -1,7 +1,10 @@
 package app
 
 import (
+	"log"
 	"log/slog"
+
+	"github.com/aziret/s3-mini/internal/adapters/api/grpc_server/filetransfer"
 
 	"github.com/aziret/s3-mini/internal/adapters/api/file"
 	"github.com/aziret/s3-mini/internal/adapters/infra/crontask"
@@ -15,11 +18,13 @@ import (
 )
 
 type serviceProvider struct {
-	log         *slog.Logger
-	fileRepo    repository.FileRepository
-	fileService service.FileService
-	fileImpl    *file.Implementation
-	cronTask    *crontask.CronTask
+	log              *slog.Logger
+	fileRepo         repository.FileRepository
+	fileService      service.FileService
+	fileImpl         *file.Implementation
+	fileTransferImpl *filetransfer.Implementation
+	cronTask         *crontask.CronTask
+	grpcConfig       config.GRPCConfig
 }
 
 func newServiceProvider() *serviceProvider {
@@ -71,9 +76,30 @@ func (s *serviceProvider) FileImpl() *file.Implementation {
 	return s.fileImpl
 }
 
+func (s *serviceProvider) FileTransferImpl() *filetransfer.Implementation {
+	if s.fileTransferImpl == nil {
+		s.fileTransferImpl = filetransfer.NewImplementation(s.FileService(), s.Logger())
+	}
+
+	return s.fileTransferImpl
+}
+
 func (s *serviceProvider) CronTask() *crontask.CronTask {
 	if s.cronTask == nil {
 		s.cronTask = crontask.NewCronTask(s.FileService(), s.Logger())
 	}
 	return s.cronTask
+}
+
+func (s *serviceProvider) GRPCConfig() config.GRPCConfig {
+	if s.grpcConfig == nil {
+		cfg, err := config.NewGRPCConfig()
+		if err != nil {
+			log.Fatalf("failed to get grpc config: %s", err.Error())
+		}
+
+		s.grpcConfig = cfg
+	}
+
+	return s.grpcConfig
 }
