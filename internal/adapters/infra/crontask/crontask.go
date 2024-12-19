@@ -3,7 +3,7 @@ package crontask
 import (
 	"log/slog"
 
-	"github.com/aziret/s3-mini/internal/service"
+	"github.com/aziret/s3-mini-internal/internal/service"
 	"github.com/robfig/cron/v3"
 )
 

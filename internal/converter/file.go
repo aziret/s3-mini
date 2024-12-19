@@ -1,7 +1,7 @@
 package converter
 
 import (
-	"github.com/aziret/s3-mini/internal/model"
+	"github.com/aziret/s3-mini-internal/internal/model"
 	tusd "github.com/tus/tusd/v2/pkg/handler"
 )
 

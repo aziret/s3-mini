@@ -4,7 +4,7 @@ import (
 	"context"
 	"log"
 
-	"github.com/aziret/s3-mini/internal/app"
+	"github.com/aziret/s3-mini-internal/internal/app"
 )
 
 func main() {

@@ -7,13 +7,13 @@ import (
 	"net"
 	"net/http"
 
-	"github.com/aziret/s3-mini/pkg/api/filetransfer_v1"
+	"github.com/aziret/s3-mini-internal/pkg/api/filetransfer_v1"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/reflection"
 
-	"github.com/aziret/s3-mini/internal/config"
-	"github.com/aziret/s3-mini/internal/lib/logger/sl"
+	"github.com/aziret/s3-mini-internal/internal/config"
+	"github.com/aziret/s3-mini-internal/internal/lib/logger/sl"
 )
 
 type App struct {

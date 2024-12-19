@@ -4,8 +4,8 @@ import (
 	"log/slog"
 	"sync"
 
-	"github.com/aziret/s3-mini/internal/adapters/repository"
-	"github.com/aziret/s3-mini/internal/model"
+	"github.com/aziret/s3-mini-internal/internal/adapters/repository"
+	"github.com/aziret/s3-mini-internal/internal/model"
 )
 
 type Service struct {

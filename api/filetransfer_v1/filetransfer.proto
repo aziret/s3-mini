@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package file_v1;
 
-option go_package = "github.com/aziret/s3-mini/pkg/filetransfer_v1";
+option go_package = "github.com/aziret/s3-mini-internal/pkg/filetransfer_v1";
 
 service FileTransferServiceV1 {
   rpc UploadFile(stream FileChunk) returns (UploadStatus);

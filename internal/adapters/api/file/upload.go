@@ -5,9 +5,9 @@ import (
 	"errors"
 	"log/slog"
 
-	"github.com/aziret/s3-mini/internal/adapters/repository"
-	"github.com/aziret/s3-mini/internal/converter"
-	"github.com/aziret/s3-mini/internal/lib/logger/sl"
+	"github.com/aziret/s3-mini-internal/internal/adapters/repository"
+	"github.com/aziret/s3-mini-internal/internal/converter"
+	"github.com/aziret/s3-mini-internal/internal/lib/logger/sl"
 )
 
 func (impl *Implementation) ListenUpdates(ctx context.Context) {

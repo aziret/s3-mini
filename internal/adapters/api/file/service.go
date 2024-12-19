@@ -1,8 +1,8 @@
 package file
 
 import (
-	"github.com/aziret/s3-mini/internal/lib/logger/sl"
-	"github.com/aziret/s3-mini/internal/service"
+	"github.com/aziret/s3-mini-internal/internal/lib/logger/sl"
+	"github.com/aziret/s3-mini-internal/internal/service"
 	"github.com/tus/tusd/v2/pkg/filelocker"
 	"github.com/tus/tusd/v2/pkg/filestore"
 	tusd "github.com/tus/tusd/v2/pkg/handler"
