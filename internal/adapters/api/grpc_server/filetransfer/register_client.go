@@ -36,6 +36,10 @@ func (i *Implementation) RegisterClient(ctx context.Context, req *filetransfer_v
 
 	if err != nil {
 		log.Error("failed to register client", sl.Err(err))
+
+		resp.Success = false
+		resp.Message = "invalid data provided"
+		return resp, errors.New(resp.Message)
 	}
 	resp.Success = true
 	resp.Message = "Client saved successfully"
