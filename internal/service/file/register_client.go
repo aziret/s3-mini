@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/aziret/s3-mini-internal/internal/adapters/api/grpc_client/filetransfer"
 	"log/slog"
 
 	"github.com/aziret/s3-mini-internal/internal/adapters/repository"
@@ -34,5 +35,5 @@ func (s *Service) RegisterClient(ctx context.Context, server *model.Server) erro
 func (s *Service) updateServerData(server *model.Server) {
 	s.serversMap.mu.Lock()
 	defer s.serversMap.mu.Unlock()
-	s.serversMap.servers[server.UUID] = *server
+	s.serversMap.servers[server.UUID] = filetransfer.NewImplementation(s.logger, server.Address)
 }
