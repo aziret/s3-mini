@@ -41,6 +41,9 @@ func (i *Implementation) RegisterClient(ctx context.Context, req *filetransfer_v
 		resp.Message = "invalid data provided"
 		return resp, errors.New(resp.Message)
 	}
+
+	log.Info("successfully registered client", slog.String("UUID", req.GetUuid()), slog.String("Address", p.Addr.String()))
+
 	resp.Success = true
 	resp.Message = "Client saved successfully"
 	return resp, nil
