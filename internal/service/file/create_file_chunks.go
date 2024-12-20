@@ -8,8 +8,7 @@ import (
 	"github.com/aziret/s3-mini-internal/internal/model"
 )
 
-func (s *Service) CreateFileChunks() {
-	ctx := context.Background()
+func (s *Service) CreateFileChunks(ctx context.Context) {
 	const op = "service.file.CreateFileChunks"
 
 	log := s.logger.With(

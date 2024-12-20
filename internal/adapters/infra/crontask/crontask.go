@@ -1,6 +1,7 @@
 package crontask
 
 import (
+	"context"
 	"log/slog"
 
 	"github.com/aziret/s3-mini-internal/internal/service"
@@ -21,7 +22,14 @@ func NewCronTask(fileService service.FileService, logger *slog.Logger) *CronTask
 	}
 }
 
-func (task *CronTask) Run() {
-	task.cron.AddFunc("1-59/5 * * * *", task.fileService.CreateFileChunks)
+func (task *CronTask) Run(ctx context.Context) {
+	task.cron.AddFunc("1-59/5 * * * *", wrapFunction(ctx, task.fileService.CreateFileChunks))
+	task.cron.AddFunc("2-59/5 * * * *", wrapFunction(ctx, task.fileService.UploadFileChunks))
 	task.cron.Start()
+}
+
+func wrapFunction(ctx context.Context, f func(ctx context.Context)) func() {
+	return func() {
+		f(ctx)
+	}
 }
