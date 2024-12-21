@@ -35,10 +35,13 @@ func NewApp(ctx context.Context) (*App, error) {
 func (a *App) Run(ctx context.Context) error {
 	a.runCronTask(ctx)
 
-	err := a.runGRPCServer()
-	if err != nil {
-		return err
-	}
+	go func() {
+		err := a.runGRPCServer()
+		if err != nil {
+			fmt.Println("Error running GRPC Server")
+			panic(err)
+		}
+	}()
 
 	return a.runHTTPServer()
 }
@@ -122,6 +125,7 @@ func (a *App) runHTTPServer() error {
 
 		return fmt.Errorf("%s: %w", op, err)
 	}
+	log.Info("running and serving HTTP server")
 
 	return nil
 }
