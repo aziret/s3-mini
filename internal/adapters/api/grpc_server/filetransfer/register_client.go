@@ -42,7 +42,7 @@ func (i *Implementation) RegisterClient(ctx context.Context, req *filetransfer_v
 		return resp, errors.New(resp.Message)
 	}
 
-	log.Info("successfully registered client", slog.String("UUID", req.GetUuid()), slog.String("Address", p.Addr.String()))
+	log.Info("successfully registered client", slog.String("UUID", req.GetUuid()), slog.String("Port", req.GetPort()), slog.String("Address", p.Addr.String()))
 
 	resp.Success = true
 	resp.Message = "Client saved successfully"
