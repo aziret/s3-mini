@@ -33,7 +33,7 @@ func NewApp(ctx context.Context) (*App, error) {
 }
 
 func (a *App) Run(ctx context.Context) error {
-	a.serviceProvider.CronTask().Run(ctx)
+	a.runCronTask(ctx)
 
 	err := a.runGRPCServer()
 	if err != nil {
@@ -102,8 +102,8 @@ func (a *App) initGRPCServer(_ context.Context) error {
 	return nil
 }
 
-func (a *App) runCronTask() error {
-	a.serviceProvider.CronTask().Run()
+func (a *App) runCronTask(ctx context.Context) error {
+	a.serviceProvider.CronTask().Run(ctx)
 	return nil
 }
 
