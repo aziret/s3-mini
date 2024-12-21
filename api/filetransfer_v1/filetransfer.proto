@@ -26,6 +26,7 @@ message FileChunkRequest {
 
 message PingRequest {
   string uuid = 1;
+  string port = 2;
 }
 
 message PongResponse {
