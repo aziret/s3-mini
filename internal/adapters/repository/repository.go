@@ -22,4 +22,5 @@ type FileRepository interface {
 	RegisterClient(ctx context.Context, server *model.Server) error
 	GetNotSentFileChunks(ctx context.Context) (*[]model.FileChunk, error)
 	MarkFileChunkSuccessfullyUploaded(UUID string, serverID string) error
+	MarkFilesAsUploadCompleted(ctx context.Context) error
 }
