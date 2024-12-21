@@ -192,8 +192,5 @@ func (s *Service) getFileChunkUpload(fileChunk *model.FileChunk) (*model.FileChu
 }
 
 func (s *Service) markFileChunkUploadedSuccessfully(UUID string) {
-	const op = "service.file.markFileChunkUploadedSuccessfully"
-	log := s.logger.With(slog.String("op", op))
-
 	s.fileRepo.MarkFileChunkSuccessfullyUploaded(UUID)
 }
