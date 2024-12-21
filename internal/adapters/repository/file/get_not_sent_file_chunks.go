@@ -15,7 +15,7 @@ func (repo *repository) GetNotSentFileChunks(_ context.Context) (*[]model.FileCh
 		slog.String("op", op),
 	)
 
-	stmt, err := repo.db.Prepare("SELECT file_chunks.id, file_chunks.chunk_size, file_chunks.chunk_number, files.file_path FROM file_chunks WHERE file_chunks.download_completed = FALSE INNER JOIN files ON file_chunks.file_id = files.id")
+	stmt, err := repo.db.Prepare("SELECT file_chunks.id, file_chunks.chunk_size, file_chunks.chunk_number, files.file_path FROM file_chunks INNER JOIN files ON file_chunks.file_id = files.id WHERE file_chunks.download_completed = FALSE")
 	if err != nil {
 		log.Error("failed to prepare statement", sl.Err(err))
 		return nil, fmt.Errorf("%s: %w", op, err)
