@@ -89,21 +89,21 @@ func (s *Service) enqueueJobsToUploadFileChunks(ctx context.Context, fileChunks 
 		currentIdx %= len(serverIDs)
 
 		fileChunksChan := make(chan model.FileChunkUpload)
+		serverID := serverIDs[currentIdx]
 
 		wg.Add(2)
-		go func(idx int) {
+		go func(idx int, serverID string) {
 			defer wg.Done()
 			defer func() { <-workersChannel }()
 
-			serverID := serverIDs[idx]
 			s.transferFileChunks(ctx, serverID, fileChunksChan)
-		}(currentIdx)
-		go func() {
+		}(currentIdx, serverID)
+		go func(startIdx int, serverID string) {
 			defer wg.Done()
 			defer func() { <-workersChannel }()
 
-			s.sendFileChunksToChannel(i, len(serverIDs), fileChunks, fileChunksChan)
-		}()
+			s.sendFileChunksToChannel(startIdx, serverID, len(serverIDs), fileChunks, fileChunksChan)
+		}(i, serverID)
 		i++
 	}
 
@@ -130,7 +130,7 @@ func (s *Service) transferFileChunks(ctx context.Context, serverID string, fileC
 
 }
 
-func (s *Service) sendFileChunksToChannel(startIdx, step int, fileChunks *[]model.FileChunk, fileChunksChan chan model.FileChunkUpload) {
+func (s *Service) sendFileChunksToChannel(startIdx int, serverID string, step int, fileChunks *[]model.FileChunk, fileChunksChan chan model.FileChunkUpload) {
 	const op = "service.file.getFileChunkUpload"
 	log := s.logger.With(slog.String("op", op))
 	defer close(fileChunksChan)
@@ -145,7 +145,7 @@ func (s *Service) sendFileChunksToChannel(startIdx, step int, fileChunks *[]mode
 		}
 		fileChunksChan <- *fileChunkUpload
 
-		s.markFileChunkUploadedSuccessfully(chunk.UUID)
+		s.markFileChunkUploadedSuccessfully(chunk.UUID, serverID)
 		startIdx += step
 	}
 }
@@ -191,6 +191,6 @@ func (s *Service) getFileChunkUpload(fileChunk *model.FileChunk) (*model.FileChu
 	}, nil
 }
 
-func (s *Service) markFileChunkUploadedSuccessfully(UUID string) {
-	s.fileRepo.MarkFileChunkSuccessfullyUploaded(UUID)
+func (s *Service) markFileChunkUploadedSuccessfully(UUID string, serverID string) {
+	s.fileRepo.MarkFileChunkSuccessfullyUploaded(UUID, serverID)
 }
