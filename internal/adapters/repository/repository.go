@@ -23,4 +23,6 @@ type FileRepository interface {
 	GetNotSentFileChunks(ctx context.Context) (*[]model.FileChunk, error)
 	MarkFileChunkSuccessfullyUploaded(UUID string, serverID string) error
 	MarkFilesAsUploadCompleted(ctx context.Context) error
+	GetUploadCompletedFiles(ctx context.Context) (*[]model.File, error)
+	MarkFilesAsReadyToDownload(ctx context.Context, deletedFileIds []int64) error
 }
