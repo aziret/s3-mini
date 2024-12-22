@@ -12,4 +12,5 @@ type FileService interface {
 	RegisterClient(ctx context.Context, server *model.Server) error
 	UploadFileChunks(ctx context.Context)
 	MarkFilesAsUploadCompleted(ctx context.Context)
+	RemoveUploadedFiles(ctx context.Context)
 }

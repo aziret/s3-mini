@@ -27,6 +27,7 @@ func (task *CronTask) Run(ctx context.Context) {
 	task.cron.AddFunc("1-59/5 * * * *", wrapFunction(ctx, task.fileService.CreateFileChunks))
 	task.cron.AddFunc("2-59/5 * * * *", wrapFunction(ctx, task.fileService.UploadFileChunks))
 	task.cron.AddFunc("3-59/5 * * * *", wrapFunction(ctx, task.fileService.MarkFilesAsUploadCompleted))
+	task.cron.AddFunc("4-59/5 * * * *", wrapFunction(ctx, task.fileService.RemoveUploadedFiles))
 	task.cron.Start()
 }
 
