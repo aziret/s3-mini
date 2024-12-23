@@ -22,7 +22,7 @@ func (i *Implementation) UploadFileChunks(ctx context.Context, fileChunksChan ch
 	}
 
 	for fileChunkUpload := range fileChunksChan {
-		err = stream.Send(&filetransfer_v1.FileChunk{
+		err = stream.Send(&filetransfer_v1.FileChunkUpload{
 			Uuid: fileChunkUpload.UUID,
 			Data: fileChunkUpload.Data,
 		})

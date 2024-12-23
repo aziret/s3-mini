@@ -28,7 +28,7 @@ func (s *Service) RemoveUploadedFiles(ctx context.Context) {
 	deletedFileIds := make([]int64, 0, len(*uploadCompletedFiles))
 
 	for _, file := range *uploadCompletedFiles {
-		err = s.removeUploadedFile(ctx, file.FilePath)
+		err = s.removeUploadedFile(ctx, "./"+file.FilePath)
 		if err != nil {
 			log.Error("failed to remove uploaded file", sl.Err(err))
 			continue
@@ -53,6 +53,10 @@ func (s *Service) removeUploadedFile(_ context.Context, filePath string) error {
 
 	err := os.Remove(filePath)
 	if err != nil {
+		if os.IsNotExist(err) {
+			log.Info("file does not exist", sl.Err(err))
+			return nil
+		}
 		log.Error(
 			"failed to remove file",
 			slog.String("filePath", filePath),

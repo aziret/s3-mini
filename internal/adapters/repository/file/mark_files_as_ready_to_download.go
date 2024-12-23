@@ -18,7 +18,7 @@ func (repo *repository) MarkFilesAsReadyToDownload(ctx context.Context, deletedF
 	deletedFilesPlaceholders := make([]string, 0, len(deletedFileIds))
 	args := make([]interface{}, len(deletedFileIds))
 	for i, fileID := range deletedFileIds {
-		deletedFilesPlaceholders = append(deletedFilesPlaceholders, fmt.Sprintf("$%q", i+1))
+		deletedFilesPlaceholders = append(deletedFilesPlaceholders, fmt.Sprintf("$%d", i+1))
 		args[i] = fileID
 	}
 
