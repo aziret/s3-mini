@@ -15,7 +15,7 @@ var (
 
 type FileRepository interface {
 	Create(ctx context.Context, info *model.File) (int64, error)
-	GetFile(ID int64) (*model.File, error)
+	GetFile(ctx context.Context, ID int64) (*model.File, error)
 	GetFilesWithoutChunks(ctx context.Context) (*[]model.File, error)
 	CreateFileChunksForFile(ctx context.Context, file *model.File) error
 	MarkFileChunksCreated(ctx context.Context, id int64) error

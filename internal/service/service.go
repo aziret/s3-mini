@@ -14,4 +14,5 @@ type FileService interface {
 	MarkFilesAsUploadCompleted(ctx context.Context)
 	RemoveUploadedFiles(ctx context.Context)
 	GetFiles(ctx context.Context) (*[]model.FileInfo, error)
+	GetFile(ctx context.Context, fileID int64) (string, error)
 }

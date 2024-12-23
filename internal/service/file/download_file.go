@@ -68,7 +68,7 @@ func (s *Service) DownloadFile(ctx context.Context, id int64) (string, error) {
 
 	file, err := os.Create(filepath)
 	if err != nil {
-		log.Error("failed to create file", slog.String("filepath", filepath))
+		log.Error("failed to create file", slog.String("filepath", filepath), sl.Err(err))
 		return "", fmt.Errorf("error creating file: %v", err)
 	}
 	defer func(file *os.File) {

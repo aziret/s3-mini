@@ -176,6 +176,7 @@ func (a *App) runGRPCServer() error {
 func (a *App) runFiberServer(_ context.Context) error {
 	fileHandler := file.NewFileHandler(a.serviceProvider.FileService())
 	a.fiberServer.Get("/files", fileHandler.GetFiles)
+	a.fiberServer.Get("/files/:id", fileHandler.GetFile)
 
 	port := os.Getenv("FIBER_SERVER_PORT")
 
