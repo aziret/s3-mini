@@ -84,6 +84,7 @@ func (s *Service) enqueueJobsToUploadFileChunks(ctx context.Context, fileChunks 
 
 	for i < len(serverIDs) {
 		workersChannel <- struct{}{}
+		workersChannel <- struct{}{}
 
 		currentIdx += i
 		currentIdx %= len(serverIDs)
