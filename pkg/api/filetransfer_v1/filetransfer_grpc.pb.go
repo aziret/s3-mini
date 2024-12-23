@@ -28,8 +28,8 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type FileTransferServiceV1Client interface {
-	UploadFile(ctx context.Context, opts ...grpc.CallOption) (grpc.ClientStreamingClient[FileChunk, UploadStatus], error)
-	DownloadFile(ctx context.Context, opts ...grpc.CallOption) (grpc.BidiStreamingClient[FileChunkRequest, FileChunk], error)
+	UploadFile(ctx context.Context, opts ...grpc.CallOption) (grpc.ClientStreamingClient[FileChunkUpload, UploadStatus], error)
+	DownloadFile(ctx context.Context, opts ...grpc.CallOption) (grpc.BidiStreamingClient[FileChunkRequest, FileChunkDownload], error)
 	RegisterClient(ctx context.Context, in *PingRequest, opts ...grpc.CallOption) (*PongResponse, error)
 }
 
@@ -41,31 +41,31 @@ func NewFileTransferServiceV1Client(cc grpc.ClientConnInterface) FileTransferSer
 	return &fileTransferServiceV1Client{cc}
 }
 
-func (c *fileTransferServiceV1Client) UploadFile(ctx context.Context, opts ...grpc.CallOption) (grpc.ClientStreamingClient[FileChunk, UploadStatus], error) {
+func (c *fileTransferServiceV1Client) UploadFile(ctx context.Context, opts ...grpc.CallOption) (grpc.ClientStreamingClient[FileChunkUpload, UploadStatus], error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	stream, err := c.cc.NewStream(ctx, &FileTransferServiceV1_ServiceDesc.Streams[0], FileTransferServiceV1_UploadFile_FullMethodName, cOpts...)
 	if err != nil {
 		return nil, err
 	}
-	x := &grpc.GenericClientStream[FileChunk, UploadStatus]{ClientStream: stream}
+	x := &grpc.GenericClientStream[FileChunkUpload, UploadStatus]{ClientStream: stream}
 	return x, nil
 }
 
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type FileTransferServiceV1_UploadFileClient = grpc.ClientStreamingClient[FileChunk, UploadStatus]
+type FileTransferServiceV1_UploadFileClient = grpc.ClientStreamingClient[FileChunkUpload, UploadStatus]
 
-func (c *fileTransferServiceV1Client) DownloadFile(ctx context.Context, opts ...grpc.CallOption) (grpc.BidiStreamingClient[FileChunkRequest, FileChunk], error) {
+func (c *fileTransferServiceV1Client) DownloadFile(ctx context.Context, opts ...grpc.CallOption) (grpc.BidiStreamingClient[FileChunkRequest, FileChunkDownload], error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	stream, err := c.cc.NewStream(ctx, &FileTransferServiceV1_ServiceDesc.Streams[1], FileTransferServiceV1_DownloadFile_FullMethodName, cOpts...)
 	if err != nil {
 		return nil, err
 	}
-	x := &grpc.GenericClientStream[FileChunkRequest, FileChunk]{ClientStream: stream}
+	x := &grpc.GenericClientStream[FileChunkRequest, FileChunkDownload]{ClientStream: stream}
 	return x, nil
 }
 
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type FileTransferServiceV1_DownloadFileClient = grpc.BidiStreamingClient[FileChunkRequest, FileChunk]
+type FileTransferServiceV1_DownloadFileClient = grpc.BidiStreamingClient[FileChunkRequest, FileChunkDownload]
 
 func (c *fileTransferServiceV1Client) RegisterClient(ctx context.Context, in *PingRequest, opts ...grpc.CallOption) (*PongResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
@@ -81,8 +81,8 @@ func (c *fileTransferServiceV1Client) RegisterClient(ctx context.Context, in *Pi
 // All implementations must embed UnimplementedFileTransferServiceV1Server
 // for forward compatibility.
 type FileTransferServiceV1Server interface {
-	UploadFile(grpc.ClientStreamingServer[FileChunk, UploadStatus]) error
-	DownloadFile(grpc.BidiStreamingServer[FileChunkRequest, FileChunk]) error
+	UploadFile(grpc.ClientStreamingServer[FileChunkUpload, UploadStatus]) error
+	DownloadFile(grpc.BidiStreamingServer[FileChunkRequest, FileChunkDownload]) error
 	RegisterClient(context.Context, *PingRequest) (*PongResponse, error)
 	mustEmbedUnimplementedFileTransferServiceV1Server()
 }
@@ -94,10 +94,10 @@ type FileTransferServiceV1Server interface {
 // pointer dereference when methods are called.
 type UnimplementedFileTransferServiceV1Server struct{}
 
-func (UnimplementedFileTransferServiceV1Server) UploadFile(grpc.ClientStreamingServer[FileChunk, UploadStatus]) error {
+func (UnimplementedFileTransferServiceV1Server) UploadFile(grpc.ClientStreamingServer[FileChunkUpload, UploadStatus]) error {
 	return status.Errorf(codes.Unimplemented, "method UploadFile not implemented")
 }
-func (UnimplementedFileTransferServiceV1Server) DownloadFile(grpc.BidiStreamingServer[FileChunkRequest, FileChunk]) error {
+func (UnimplementedFileTransferServiceV1Server) DownloadFile(grpc.BidiStreamingServer[FileChunkRequest, FileChunkDownload]) error {
 	return status.Errorf(codes.Unimplemented, "method DownloadFile not implemented")
 }
 func (UnimplementedFileTransferServiceV1Server) RegisterClient(context.Context, *PingRequest) (*PongResponse, error) {
@@ -125,18 +125,18 @@ func RegisterFileTransferServiceV1Server(s grpc.ServiceRegistrar, srv FileTransf
 }
 
 func _FileTransferServiceV1_UploadFile_Handler(srv interface{}, stream grpc.ServerStream) error {
-	return srv.(FileTransferServiceV1Server).UploadFile(&grpc.GenericServerStream[FileChunk, UploadStatus]{ServerStream: stream})
+	return srv.(FileTransferServiceV1Server).UploadFile(&grpc.GenericServerStream[FileChunkUpload, UploadStatus]{ServerStream: stream})
 }
 
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type FileTransferServiceV1_UploadFileServer = grpc.ClientStreamingServer[FileChunk, UploadStatus]
+type FileTransferServiceV1_UploadFileServer = grpc.ClientStreamingServer[FileChunkUpload, UploadStatus]
 
 func _FileTransferServiceV1_DownloadFile_Handler(srv interface{}, stream grpc.ServerStream) error {
-	return srv.(FileTransferServiceV1Server).DownloadFile(&grpc.GenericServerStream[FileChunkRequest, FileChunk]{ServerStream: stream})
+	return srv.(FileTransferServiceV1Server).DownloadFile(&grpc.GenericServerStream[FileChunkRequest, FileChunkDownload]{ServerStream: stream})
 }
 
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type FileTransferServiceV1_DownloadFileServer = grpc.BidiStreamingServer[FileChunkRequest, FileChunk]
+type FileTransferServiceV1_DownloadFileServer = grpc.BidiStreamingServer[FileChunkRequest, FileChunkDownload]
 
 func _FileTransferServiceV1_RegisterClient_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(PingRequest)
