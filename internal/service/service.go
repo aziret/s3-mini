@@ -13,4 +13,5 @@ type FileService interface {
 	UploadFileChunks(ctx context.Context)
 	MarkFilesAsUploadCompleted(ctx context.Context)
 	RemoveUploadedFiles(ctx context.Context)
+	GetFiles(ctx context.Context) (*[]model.FileInfo, error)
 }

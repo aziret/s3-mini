@@ -3,11 +3,15 @@ package app
 import (
 	"context"
 	"fmt"
+	"log"
 	"log/slog"
 	"net"
 	"net/http"
+	"os"
 
+	"github.com/aziret/s3-mini-internal/internal/adapters/api/http/file"
 	"github.com/aziret/s3-mini-internal/pkg/api/filetransfer_v1"
+	"github.com/gofiber/fiber/v2"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/reflection"
@@ -19,6 +23,7 @@ import (
 type App struct {
 	serviceProvider *serviceProvider
 	grpcServer      *grpc.Server
+	fiberServer     *fiber.App
 }
 
 func NewApp(ctx context.Context) (*App, error) {
@@ -43,7 +48,14 @@ func (a *App) Run(ctx context.Context) error {
 		}
 	}()
 
-	return a.runHTTPServer()
+	go func() {
+		if err := a.runHTTPServer(); err != nil {
+			fmt.Println("Error running HTTP server")
+			panic(err)
+		}
+	}()
+
+	return a.runFiberServer(ctx)
 }
 
 func (a *App) initDeps(ctx context.Context) error {
@@ -53,6 +65,7 @@ func (a *App) initDeps(ctx context.Context) error {
 		a.initHTTPServer,
 		a.initGRPCServer,
 		a.initCronTask,
+		a.initFiberServer,
 	}
 
 	for _, f := range inits {
@@ -105,9 +118,13 @@ func (a *App) initGRPCServer(_ context.Context) error {
 	return nil
 }
 
-func (a *App) runCronTask(ctx context.Context) error {
-	a.serviceProvider.CronTask().Run(ctx)
+func (a *App) initFiberServer(ctx context.Context) error {
+	a.fiberServer = fiber.New()
 	return nil
+}
+
+func (a *App) runCronTask(ctx context.Context) {
+	a.serviceProvider.CronTask().Run(ctx)
 }
 
 func (a *App) runHTTPServer() error {
@@ -153,5 +170,16 @@ func (a *App) runGRPCServer() error {
 		return fmt.Errorf("%s: %w", op, err)
 	}
 
+	return nil
+}
+
+func (a *App) runFiberServer(_ context.Context) error {
+	fileHandler := file.NewFileHandler(a.serviceProvider.FileService())
+	a.fiberServer.Get("/files", fileHandler.GetFiles)
+
+	port := os.Getenv("FIBER_SERVER_PORT")
+
+	log.Printf("Starting server on http://localhost:%s", port)
+	log.Fatal(a.fiberServer.Listen(":" + port))
 	return nil
 }

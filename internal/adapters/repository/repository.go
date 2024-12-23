@@ -27,4 +27,5 @@ type FileRepository interface {
 	MarkFilesAsReadyToDownload(ctx context.Context, deletedFileIds []int64) error
 	GetFileChunksByFileIDAndServerID(ctx context.Context, fileID int64, serverID string) (*[]model.FileChunk, error)
 	GetFileChunksServerIDs(ctx context.Context, fileID int64) (*[]string, error)
+	GetFiles(ctx context.Context) (*[]model.FileInfo, error)
 }

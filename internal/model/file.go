@@ -9,3 +9,8 @@ type File struct {
 	FilePath string
 	FileType string
 }
+
+type FileInfo struct {
+	ID   int64  `json:"id"`
+	Name string `json:"name"`
+}
