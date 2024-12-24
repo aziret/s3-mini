@@ -4,9 +4,10 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"log/slog"
+
 	"github.com/aziret/s3-mini-internal/internal/lib/logger/sl"
 	"github.com/aziret/s3-mini-internal/internal/model"
-	"log/slog"
 )
 
 func (repo *repository) GetUploadCompletedFiles(ctx context.Context) (*[]model.File, error) {
@@ -16,7 +17,7 @@ func (repo *repository) GetUploadCompletedFiles(ctx context.Context) (*[]model.F
 		slog.String("op", op),
 	)
 
-	stmt, err := repo.db.Prepare(`SELECT id, file_path FROM files WHERE download_completed = TRUE`)
+	stmt, err := repo.db.Prepare(`SELECT id, file_path FROM files WHERE download_completed = TRUE AND ready_to_download = FALSE`)
 	if err != nil {
 		log.Error("failed to prepare statement", sl.Err(err))
 		return nil, fmt.Errorf("%s: %w", op, err)
