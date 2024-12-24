@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"log/slog"
 
-	repoPackage "github.com/aziret/s3-mini-internal/internal/adapters/repository"
-	"github.com/aziret/s3-mini-internal/internal/lib/logger/sl"
-	"github.com/aziret/s3-mini-internal/internal/model"
+	repoPackage "github.com/aziret/s3-mini/internal/adapters/repository"
+	"github.com/aziret/s3-mini/internal/lib/logger/sl"
+	"github.com/aziret/s3-mini/internal/model"
 	"github.com/lib/pq"
 )
 

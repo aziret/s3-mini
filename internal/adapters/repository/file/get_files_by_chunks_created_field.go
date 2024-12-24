@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"log/slog"
 
-	"github.com/aziret/s3-mini-internal/internal/lib/logger/sl"
-	"github.com/aziret/s3-mini-internal/internal/model"
+	"github.com/aziret/s3-mini/internal/lib/logger/sl"
+	"github.com/aziret/s3-mini/internal/model"
 )
 
 func (repo *repository) GetFilesWithoutChunks(ctx context.Context) (*[]model.File, error) {

@@ -9,8 +9,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/aziret/s3-mini-internal/internal/lib/logger/sl"
-	"github.com/aziret/s3-mini-internal/internal/model"
+	"github.com/aziret/s3-mini/internal/lib/logger/sl"
+	"github.com/aziret/s3-mini/internal/model"
 )
 
 func (repo *repository) CreateFileChunksForFile(_ context.Context, file *model.File) error {

@@ -3,9 +3,10 @@ package file
 import (
 	"context"
 	"fmt"
-	"github.com/aziret/s3-mini-internal/internal/lib/logger/sl"
-	"github.com/aziret/s3-mini-internal/internal/model"
 	"log/slog"
+
+	"github.com/aziret/s3-mini/internal/lib/logger/sl"
+	"github.com/aziret/s3-mini/internal/model"
 )
 
 func (repo *repository) GetNotSentFileChunks(_ context.Context) (*[]model.FileChunk, error) {

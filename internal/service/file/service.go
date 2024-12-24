@@ -4,9 +4,9 @@ import (
 	"log/slog"
 	"sync"
 
-	"github.com/aziret/s3-mini-internal/internal/adapters/api/grpc_client/filetransfer"
+	"github.com/aziret/s3-mini/internal/adapters/api/grpc_client/filetransfer"
 
-	"github.com/aziret/s3-mini-internal/internal/adapters/repository"
+	"github.com/aziret/s3-mini/internal/adapters/repository"
 )
 
 type Service struct {

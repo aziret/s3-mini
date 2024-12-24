@@ -6,9 +6,8 @@ import (
 	"errors"
 	"log/slog"
 
-	"github.com/aziret/s3-mini-internal/internal/lib/logger/sl"
-
-	"github.com/aziret/s3-mini-internal/internal/model"
+	"github.com/aziret/s3-mini/internal/lib/logger/sl"
+	"github.com/aziret/s3-mini/internal/model"
 )
 
 func (repo *repository) GetFile(_ context.Context, ID int64) (*model.File, error) {

@@ -4,8 +4,8 @@ import (
 	"context"
 	"log/slog"
 
-	"github.com/aziret/s3-mini-internal/internal/lib/logger/sl"
-	"github.com/aziret/s3-mini-internal/internal/model"
+	"github.com/aziret/s3-mini/internal/lib/logger/sl"
+	"github.com/aziret/s3-mini/internal/model"
 )
 
 func (s *Service) CreateFileChunks(ctx context.Context) {

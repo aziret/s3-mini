@@ -3,8 +3,9 @@ package file
 import (
 	"context"
 	"fmt"
-	"github.com/aziret/s3-mini-internal/internal/lib/logger/sl"
 	"log/slog"
+
+	"github.com/aziret/s3-mini/internal/lib/logger/sl"
 )
 
 func (repo *repository) MarkFileChunksCreated(_ context.Context, id int64) error {

@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"log/slog"
 
-	"github.com/aziret/s3-mini-internal/internal/lib/logger/sl"
+	"github.com/aziret/s3-mini/internal/lib/logger/sl"
 )
 
 func (repo *repository) GetFileChunksServerIDs(ctx context.Context, fileID int64) (*[]string, error) {

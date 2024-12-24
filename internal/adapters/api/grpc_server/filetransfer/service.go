@@ -3,8 +3,8 @@ package filetransfer
 import (
 	"log/slog"
 
-	"github.com/aziret/s3-mini-internal/internal/service"
-	"github.com/aziret/s3-mini-internal/pkg/api/filetransfer_v1"
+	"github.com/aziret/s3-mini/internal/service"
+	"github.com/aziret/s3-mini/pkg/api/filetransfer_v1"
 )
 
 type Implementation struct {

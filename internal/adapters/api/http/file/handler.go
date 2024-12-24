@@ -1,6 +1,6 @@
 package file
 
-import "github.com/aziret/s3-mini-internal/internal/service"
+import "github.com/aziret/s3-mini/internal/service"
 
 type FileHandler struct {
 	fileService service.FileService

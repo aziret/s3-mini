@@ -6,7 +6,7 @@ import (
 	"log/slog"
 	"os"
 
-	"github.com/aziret/s3-mini-internal/internal/lib/logger/sl"
+	"github.com/aziret/s3-mini/internal/lib/logger/sl"
 )
 
 func (s *Service) RemoveUploadedFiles(ctx context.Context) {

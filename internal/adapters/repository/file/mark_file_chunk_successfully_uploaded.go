@@ -3,8 +3,9 @@ package file
 import (
 	"database/sql"
 	"fmt"
-	"github.com/aziret/s3-mini-internal/internal/lib/logger/sl"
 	"log/slog"
+
+	"github.com/aziret/s3-mini/internal/lib/logger/sl"
 )
 
 func (repo *repository) MarkFileChunkSuccessfullyUploaded(UUID string, serverID string) error {

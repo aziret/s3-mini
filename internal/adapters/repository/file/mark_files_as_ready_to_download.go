@@ -4,9 +4,10 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
-	"github.com/aziret/s3-mini-internal/internal/lib/logger/sl"
 	"log/slog"
 	"strings"
+
+	"github.com/aziret/s3-mini/internal/lib/logger/sl"
 )
 
 func (repo *repository) MarkFilesAsReadyToDownload(ctx context.Context, deletedFileIds []int64) error {

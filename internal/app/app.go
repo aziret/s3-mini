@@ -9,16 +9,16 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/aziret/s3-mini-internal/internal/adapters/api/http/file"
-	"github.com/aziret/s3-mini-internal/pkg/api/filetransfer_v1"
+	"github.com/aziret/s3-mini/internal/adapters/api/http/file"
+	"github.com/aziret/s3-mini/pkg/api/filetransfer_v1"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/reflection"
 
-	"github.com/aziret/s3-mini-internal/internal/config"
-	"github.com/aziret/s3-mini-internal/internal/lib/logger/sl"
+	"github.com/aziret/s3-mini/internal/config"
+	"github.com/aziret/s3-mini/internal/lib/logger/sl"
 )
 
 type App struct {

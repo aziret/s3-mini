@@ -2,9 +2,10 @@ package file
 
 import (
 	"context"
-	"github.com/aziret/s3-mini-internal/internal/lib/logger/sl"
-	"github.com/aziret/s3-mini-internal/internal/model"
 	"log/slog"
+
+	"github.com/aziret/s3-mini/internal/lib/logger/sl"
+	"github.com/aziret/s3-mini/internal/model"
 )
 
 func (s *Service) GetFiles(ctx context.Context) (*[]model.FileInfo, error) {

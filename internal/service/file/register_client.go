@@ -4,11 +4,12 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/aziret/s3-mini-internal/internal/adapters/api/grpc_client/filetransfer"
 	"log/slog"
 
-	"github.com/aziret/s3-mini-internal/internal/adapters/repository"
-	"github.com/aziret/s3-mini-internal/internal/model"
+	"github.com/aziret/s3-mini/internal/adapters/api/grpc_client/filetransfer"
+
+	"github.com/aziret/s3-mini/internal/adapters/repository"
+	"github.com/aziret/s3-mini/internal/model"
 )
 
 func (s *Service) RegisterClient(ctx context.Context, server *model.Server) error {

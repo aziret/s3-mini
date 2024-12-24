@@ -3,10 +3,11 @@ package filetransfer
 import (
 	"context"
 	"fmt"
-	"github.com/aziret/s3-mini-internal/internal/lib/logger/sl"
-	"github.com/aziret/s3-mini-internal/internal/model"
-	"github.com/aziret/s3-mini-internal/pkg/api/filetransfer_v1"
 	"log/slog"
+
+	"github.com/aziret/s3-mini/internal/lib/logger/sl"
+	"github.com/aziret/s3-mini/internal/model"
+	"github.com/aziret/s3-mini/pkg/api/filetransfer_v1"
 )
 
 func (i *Implementation) UploadFileChunks(ctx context.Context, fileChunksChan chan model.FileChunkUpload) error {

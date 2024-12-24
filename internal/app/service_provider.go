@@ -4,17 +4,17 @@ import (
 	"log"
 	"log/slog"
 
-	"github.com/aziret/s3-mini-internal/internal/adapters/api/grpc_server/filetransfer"
+	"github.com/aziret/s3-mini/internal/adapters/api/grpc_server/filetransfer"
 
-	"github.com/aziret/s3-mini-internal/internal/adapters/api/file"
-	"github.com/aziret/s3-mini-internal/internal/adapters/infra/crontask"
-	"github.com/aziret/s3-mini-internal/internal/adapters/repository"
-	"github.com/aziret/s3-mini-internal/internal/config"
-	"github.com/aziret/s3-mini-internal/internal/lib/logger/sl"
-	"github.com/aziret/s3-mini-internal/internal/service"
+	"github.com/aziret/s3-mini/internal/adapters/api/file"
+	"github.com/aziret/s3-mini/internal/adapters/infra/crontask"
+	"github.com/aziret/s3-mini/internal/adapters/repository"
+	"github.com/aziret/s3-mini/internal/config"
+	"github.com/aziret/s3-mini/internal/lib/logger/sl"
+	"github.com/aziret/s3-mini/internal/service"
 
-	fileRepository "github.com/aziret/s3-mini-internal/internal/adapters/repository/file"
-	fileService "github.com/aziret/s3-mini-internal/internal/service/file"
+	fileRepository "github.com/aziret/s3-mini/internal/adapters/repository/file"
+	fileService "github.com/aziret/s3-mini/internal/service/file"
 )
 
 type serviceProvider struct {
