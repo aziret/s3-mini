@@ -3,6 +3,7 @@ package filetransfer
 import (
 	"context"
 	"fmt"
+	"io"
 
 	"github.com/aziret/s3-mini-internal/internal/lib/logger/sl"
 	"github.com/aziret/s3-mini-internal/internal/model"
@@ -48,6 +49,10 @@ func (i *Implementation) DownloadFileChunks(ctx context.Context, fileChunks <-ch
 		if err != nil {
 			if status.Code(err) == codes.Canceled {
 				log.Error("file transfer stream canceled", sl.Err(err))
+				break
+			}
+			if err == io.EOF {
+				log.Info("streaming closed")
 				break
 			}
 			log.Error("error receiving file chunk", sl.Err(err))
