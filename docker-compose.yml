@@ -4,7 +4,6 @@ services:
     ports:
       - "8080:8080"
       - "8081:8081"
-      - "50051:50051"
     depends_on:
       - db
     environment:
@@ -24,10 +23,215 @@ services:
   db:
     image: postgres:latest
     ports:
-      - "5432:5432"
+      - "5431:5432"
     restart: always
     environment:
       - POSTGRES_PASSWORD=mysecretpassword
       - POSTGRES_USER=myuser
       - POSTGRES_DB=s3_mini
       - POSTGRES_SSLMODE=disable
+
+  storage-1:
+    build:
+      context: https://github.com/aziret/s3-mini-storage.git
+      dockerfile: Dockerfile
+    depends_on:
+      - backend
+      - db-storage-1
+    environment:
+      - ENV=local
+      - MIGRATIONS_PATH=/app/internal/adapters/repository/db/migrations
+      - MIGRATIONS_TABLE=migrations
+      - PG_USER=myuser
+      - PG_PASS=mysecretpassword
+      - PG_HOST=db-storage-1
+      - PG_PORT=5432
+      - PG_DB=s3_mini_storage
+      - PG_SSL_MODE=disable
+      - CHUNK_SIZE=10000
+      - GRPC_HOST=localhost
+      - GRPC_PORT=50051
+      - MAIN_SERVER_ADDRESS=backend:50051
+
+  # storage-2:
+  #   build:
+  #     context: https://github.com/aziret/s3-mini-storage.git
+  #     dockerfile: Dockerfile
+  #   depends_on:
+  #     - backend
+  #     - db-storage-2
+  #   environment:
+  #     - ENV=local
+  #     - MIGRATIONS_PATH=/app/internal/adapters/repository/db/migrations
+  #     - MIGRATIONS_TABLE=migrations
+  #     - PG_USER=myuser
+  #     - PG_PASS=mysecretpassword
+  #     - PG_HOST=db-storage-2
+  #     - PG_PORT=5432
+  #     - PG_DB=s3_mini_storage
+  #     - PG_SSL_MODE=disable
+  #     - CHUNK_SIZE=10000
+  #     - GRPC_HOST=localhost
+  #     - GRPC_PORT=50051
+  #     - MAIN_SERVER_ADDRESS=backend:50051
+
+  # storage-3:
+  #   build:
+  #     context: https://github.com/aziret/s3-mini-storage.git
+  #     dockerfile: Dockerfile
+  #   depends_on:
+  #     - backend
+  #     - db-storage-3
+  #   environment:
+  #     - ENV=local
+  #     - MIGRATIONS_PATH=/app/internal/adapters/repository/db/migrations
+  #     - MIGRATIONS_TABLE=migrations
+  #     - PG_USER=myuser
+  #     - PG_PASS=mysecretpassword
+  #     - PG_HOST=db-storage-3
+  #     - PG_PORT=5432
+  #     - PG_DB=s3_mini_storage
+  #     - PG_SSL_MODE=disable
+  #     - CHUNK_SIZE=10000
+  #     - GRPC_HOST=localhost
+  #     - GRPC_PORT=50051
+  #     - MAIN_SERVER_ADDRESS=backend:50051
+
+  # storage-4:
+  #   build:
+  #     context: https://github.com/aziret/s3-mini-storage.git
+  #     dockerfile: Dockerfile
+  #   depends_on:
+  #     - backend
+  #     - db-storage-4
+  #   environment:
+  #     - ENV=local
+  #     - MIGRATIONS_PATH=/app/internal/adapters/repository/db/migrations
+  #     - MIGRATIONS_TABLE=migrations
+  #     - PG_USER=myuser
+  #     - PG_PASS=mysecretpassword
+  #     - PG_HOST=db-storage-4
+  #     - PG_PORT=5432
+  #     - PG_DB=s3_mini_storage
+  #     - PG_SSL_MODE=disable
+  #     - CHUNK_SIZE=10000
+  #     - GRPC_HOST=localhost
+  #     - GRPC_PORT=50051
+  #     - MAIN_SERVER_ADDRESS=backend:50051
+
+  # storage-5:
+  #   build:
+  #     context: https://github.com/aziret/s3-mini-storage.git
+  #     dockerfile: Dockerfile
+  #   depends_on:
+  #     - backend
+  #     - db-storage-5
+  #   environment:
+  #     - ENV=local
+  #     - MIGRATIONS_PATH=/app/internal/adapters/repository/db/migrations
+  #     - MIGRATIONS_TABLE=migrations
+  #     - PG_USER=myuser
+  #     - PG_PASS=mysecretpassword
+  #     - PG_HOST=db-storage-5
+  #     - PG_PORT=5432
+  #     - PG_DB=s3_mini_storage
+  #     - PG_SSL_MODE=disable
+  #     - CHUNK_SIZE=10000
+  #     - GRPC_HOST=localhost
+  #     - GRPC_PORT=50051
+  #     - MAIN_SERVER_ADDRESS=backend:50051
+
+  # storage-6:
+  #   build:
+  #     context: https://github.com/aziret/s3-mini-storage.git
+  #     dockerfile: Dockerfile
+  #   depends_on:
+  #     - backend
+  #     - db-storage-6
+  #   environment:
+  #     - ENV=local
+  #     - MIGRATIONS_PATH=/app/internal/adapters/repository/db/migrations
+  #     - MIGRATIONS_TABLE=migrations
+  #     - PG_USER=myuser
+  #     - PG_PASS=mysecretpassword
+  #     - PG_HOST=db-storage-6
+  #     - PG_PORT=5432
+  #     - PG_DB=s3_mini_storage
+  #     - PG_SSL_MODE=disable
+  #     - CHUNK_SIZE=10000
+  #     - GRPC_HOST=localhost
+  #     - GRPC_PORT=50051
+  #     - MAIN_SERVER_ADDRESS=backend:50051
+
+  db-storage-1:
+    image: postgres:latest
+    ports:
+      - "5430:5432"
+    restart: always
+    environment:
+      - POSTGRES_PASSWORD=mysecretpassword
+      - POSTGRES_USER=myuser
+      - POSTGRES_DB=s3_mini_storage
+      - POSTGRES_SSLMODE=disable
+
+  # db-storage-2:
+  #   image: postgres:latest
+  #   ports:
+  #     - "5429:5432"
+  #   restart: always
+  #   environment:
+  #     - POSTGRES_PASSWORD=mysecretpassword
+  #     - POSTGRES_USER=myuser
+  #     - POSTGRES_DB=s3_mini_storage
+  #     - POSTGRES_SSLMODE=disable
+
+  # db-storage-3:
+  #   image: postgres:latest
+  #   ports:
+  #     - "5428:5432"
+  #   restart: always
+  #   environment:
+  #     - POSTGRES_PASSWORD=mysecretpassword
+  #     - POSTGRES_USER=myuser
+  #     - POSTGRES_DB=s3_mini_storage
+  #     - POSTGRES_SSLMODE=disable
+
+  # db-storage-4:
+  #   image: postgres:latest
+  #   ports:
+  #     - "5427:5432"
+  #   restart: always
+  #   environment:
+  #     - POSTGRES_PASSWORD=mysecretpassword
+  #     - POSTGRES_USER=myuser
+  #     - POSTGRES_DB=s3_mini_storage
+  #     - POSTGRES_SSLMODE=disable
+
+  # db-storage-5:
+  #   image: postgres:latest
+  #   ports:
+  #     - "5426:5432"
+  #   restart: always
+  #   environment:
+  #     - POSTGRES_PASSWORD=mysecretpassword
+  #     - POSTGRES_USER=myuser
+  #     - POSTGRES_DB=s3_mini_storage
+  #     - POSTGRES_SSLMODE=disable
+
+  # db-storage-6:
+  #   image: postgres:latest
+  #   ports:
+  #     - "5425:5432"
+  #   restart: always
+  #   environment:
+  #     - POSTGRES_PASSWORD=mysecretpassword
+  #     - POSTGRES_USER=myuser
+  #     - POSTGRES_DB=s3_mini_storage
+  #     - POSTGRES_SSLMODE=disable
+
+  frontend:
+    build:
+      context: https://github.com/aziret/s3-mini-front.git
+      dockerfile: Dockerfile
+    depends_on:
+      - backend
