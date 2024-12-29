@@ -12,6 +12,7 @@ import (
 type Service struct {
 	logger     *slog.Logger
 	fileRepo   repository.FileRepository
+	transactor repository.Transactor
 	serversMap serversMap
 }
 
@@ -20,12 +21,13 @@ type serversMap struct {
 	servers map[string]*filetransfer.Implementation
 }
 
-func NewService(fileRepo repository.FileRepository, logger *slog.Logger) *Service {
+func NewService(fileRepo repository.FileRepository, logger *slog.Logger, transactor repository.Transactor) *Service {
 	return &Service{
 		fileRepo: fileRepo,
 		logger:   logger,
 		serversMap: serversMap{
 			servers: make(map[string]*filetransfer.Implementation),
 		},
+		transactor: transactor,
 	}
 }

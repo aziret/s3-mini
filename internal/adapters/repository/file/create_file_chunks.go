@@ -2,23 +2,36 @@ package file
 
 import (
 	"context"
+	"database/sql"
 	"fmt"
 	"log/slog"
 	"math"
 	"os"
 	"strconv"
-	"strings"
 
 	"github.com/aziret/s3-mini/internal/lib/logger/sl"
 	"github.com/aziret/s3-mini/internal/model"
 )
 
-func (repo *repository) CreateFileChunksForFile(_ context.Context, file *model.File) error {
+type databaseHandler interface {
+	Exec(query string, args ...any) (sql.Result, error)
+}
+
+func (repo *repository) CreateFileChunksForFile(ctx context.Context, file *model.File) error {
 	const op = "repository.file.CreateFileChunksForFile"
 
 	log := repo.log.With(
 		slog.String("op", op),
 	)
+
+	var dbHandler databaseHandler
+
+	tx := extractTx(ctx)
+	if tx != nil {
+		dbHandler = tx
+	} else {
+		dbHandler = repo.db
+	}
 
 	var chunkSize int64
 
@@ -30,44 +43,20 @@ func (repo *repository) CreateFileChunksForFile(_ context.Context, file *model.F
 	}
 	chunksNumber := int(math.Ceil(float64(file.Size) / float64(chunkSize)))
 
-	query := fmt.Sprintf(`
+	query := `
 		INSERT INTO file_chunks (file_id, chunk_size, chunk_number)
-        VALUES %s
+        SELECT $1 AS file_id, $2 as chunk_size gs.num AS chunk_number
+		FROM generate_series(0, $3 - 1) AS gs(num)
         ON CONFLICT (file_id, chunk_number)
         DO UPDATE SET 
-            chunk_size = EXCLUDED.chunk_size
-	`, valuesPlaceholder(chunksNumber))
+            chunk_size = EXCLUDED.chunk_size;
+	`
 
-	_, err := repo.db.Exec(query, *fileChunkValues(file.ID, chunkSize, chunksNumber)...)
+	_, err := dbHandler.Exec(query, file.ID, chunkSize, chunksNumber)
 	if err != nil {
 		log.Error("failed inserting file chunk values", sl.Err(err))
 		return fmt.Errorf("%s: %w", op, err)
 	}
 
 	return nil
-}
-
-func valuesPlaceholder(count int) string {
-	values := make([]string, count)
-
-	fieldsNumber := 3
-	for i := range count {
-		values[i] = fmt.Sprintf("($%d, $%d, $%d)", i*fieldsNumber+1, i*fieldsNumber+2, i*fieldsNumber+3)
-	}
-
-	return strings.Join(values, ",")
-}
-
-func fileChunkValues(fileID int64, chunkSize int64, chunksNumber int) *[]interface{} {
-	fieldsNumber := 3
-
-	values := make([]interface{}, chunksNumber*fieldsNumber)
-
-	for i := range chunksNumber {
-		values[i*fieldsNumber] = fileID
-		values[i*fieldsNumber+1] = chunkSize
-		values[i*fieldsNumber+2] = i
-	}
-
-	return &values
 }

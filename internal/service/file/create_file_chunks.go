@@ -2,6 +2,7 @@ package file
 
 import (
 	"context"
+	"fmt"
 	"log/slog"
 
 	"github.com/aziret/s3-mini/internal/lib/logger/sl"
@@ -22,19 +23,21 @@ func (s *Service) CreateFileChunks(ctx context.Context) {
 	}
 
 	for _, fileWC := range *filesWithoutChunks {
-		err := s.createFileChunksForSpecificFile(ctx, fileWC)
-		if err != nil {
-			log.Error("failed to create file chunks", sl.Err(err))
-		}
+		s.transactor.WithinTransaction(ctx, func(ctx context.Context) error {
+			err := s.createFileChunksForSpecificFile(ctx, fileWC)
+			if err != nil {
+				log.Error("failed to create file chunks", sl.Err(err))
+				return fmt.Errorf("%s: %w", op, err)
+			}
 
-		if err != nil {
-			continue
-		}
+			err = s.markFileChunksCreated(ctx, fileWC.ID)
+			if err != nil {
+				log.Error("failed to mark file as chunks created", sl.Err(err))
+				return fmt.Errorf("%s: %w", op, err)
+			}
 
-		err = s.markFileChunksCreated(ctx, fileWC.ID)
-		if err != nil {
-			log.Error("failed to mark file as chunks created", sl.Err(err))
-		}
+			return nil
+		})
 	}
 
 }

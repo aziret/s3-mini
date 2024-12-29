@@ -25,6 +25,7 @@ type serviceProvider struct {
 	fileTransferImpl *filetransfer.Implementation
 	cronTask         *crontask.CronTask
 	grpcConfig       config.GRPCConfig
+	transactor       repository.Transactor
 }
 
 func newServiceProvider() *serviceProvider {
@@ -60,9 +61,30 @@ func (s *serviceProvider) FileRepo() repository.FileRepository {
 	return s.fileRepo
 }
 
+func (s *serviceProvider) Transactor() repository.Transactor {
+	const op = "serviceProvider.Transactor"
+
+	log := s.Logger()
+
+	logger := log.With(
+		slog.String("op", op),
+	)
+
+	if s.transactor == nil {
+		repo, err := fileRepository.NewRepository(log)
+		if err != nil {
+			logger.Error("failed to initialize repo", sl.Err(err))
+		}
+
+		s.transactor = repo
+	}
+
+	return s.transactor
+}
+
 func (s *serviceProvider) FileService() service.FileService {
 	if s.fileService == nil {
-		s.fileService = fileService.NewService(s.FileRepo(), s.Logger())
+		s.fileService = fileService.NewService(s.FileRepo(), s.Logger(), s.Transactor())
 	}
 
 	return s.fileService
