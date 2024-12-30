@@ -67,7 +67,7 @@ func (a *App) initDeps(ctx context.Context) error {
 		a.initGRPCServer,
 		a.initCronTask,
 		a.initFiberServer,
-		a.initDownloadFolder,
+		a.initFolders,
 	}
 
 	for _, f := range inits {
@@ -125,8 +125,8 @@ func (a *App) initFiberServer(ctx context.Context) error {
 	return nil
 }
 
-func (a *App) initDownloadFolder(_ context.Context) error {
-	const op = "app.initDownloadFolder"
+func (a *App) initFolders(_ context.Context) error {
+	const op = "app.initFolders"
 
 	logger := a.serviceProvider.Logger()
 
@@ -135,6 +135,12 @@ func (a *App) initDownloadFolder(_ context.Context) error {
 	)
 
 	err := os.MkdirAll("./downloads/", os.ModePerm)
+	if err != nil {
+		log.Error("could not create directory", sl.Err(err))
+		return fmt.Errorf("%s: %w", op, err)
+	}
+
+	err = os.MkdirAll("./uploads/", os.ModePerm)
 	if err != nil {
 		log.Error("could not create directory", sl.Err(err))
 		return fmt.Errorf("%s: %w", op, err)
