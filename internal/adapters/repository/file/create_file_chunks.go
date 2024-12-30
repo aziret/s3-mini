@@ -45,7 +45,7 @@ func (repo *repository) CreateFileChunksForFile(ctx context.Context, file *model
 
 	query := `
 		INSERT INTO file_chunks (file_id, chunk_size, chunk_number)
-        SELECT $1 AS file_id, $2 as chunk_size gs.num AS chunk_number
+        SELECT $1 AS file_id, $2 as chunk_size, gs.num AS chunk_number
 		FROM generate_series(0, $3 - 1) AS gs(num)
         ON CONFLICT (file_id, chunk_number)
         DO UPDATE SET 
