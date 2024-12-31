@@ -38,31 +38,43 @@ func (s *Service) DownloadFile(ctx context.Context, id int64) (string, error) {
 
 	workersNumber *= 2
 
-	wg := sync.WaitGroup{}
-
 	workersChannel := make(chan struct{}, workersNumber)
 
 	downloadedFileChunks := make(chan model.FileChunkDownload)
-	for _, serverID := range *serverIDs {
-		workersChannel <- struct{}{}
-		workersChannel <- struct{}{}
 
-		fileChunksChan := make(chan model.FileChunk)
+	streamWG := sync.WaitGroup{}
+	downloadWG := sync.WaitGroup{}
+	downloadWG.Add(1)
+	go func() {
+		defer downloadWG.Done()
+		for _, serverID := range *serverIDs {
+			log.Info("started streaming for server", slog.String("ID", serverID))
+			workersChannel <- struct{}{}
+			workersChannel <- struct{}{}
 
-		wg.Add(2)
-		go func(ctx context.Context, serverID string, fileChunksChan chan model.FileChunk) {
-			defer wg.Done()
-			defer func() { <-workersChannel }()
+			fileChunksChan := make(chan model.FileChunk)
 
-			s.downloadFileChunks(ctx, serverID, fileChunksChan, downloadedFileChunks)
-		}(ctx, serverID, fileChunksChan)
-		go func(ctx context.Context, fileID int64, serverID string, fileChunksChan chan model.FileChunk) {
-			defer wg.Done()
-			defer func() { <-workersChannel }()
+			streamWG.Add(2)
+			go func(ctx context.Context, serverID string, fileChunksChan chan model.FileChunk) {
+				defer streamWG.Done()
+				defer func() {
+					<-workersChannel
+					log.Info("finished downloading for server", slog.String("ID", serverID))
+				}()
 
-			s.sendFileChunksToDownloadToChannel(ctx, fileID, serverID, fileChunksChan)
-		}(ctx, id, serverID, fileChunksChan)
-	}
+				s.downloadFileChunks(ctx, serverID, fileChunksChan, downloadedFileChunks)
+			}(ctx, serverID, fileChunksChan)
+			go func(ctx context.Context, fileID int64, serverID string, fileChunksChan chan model.FileChunk) {
+				defer streamWG.Done()
+				defer func() {
+					<-workersChannel
+					log.Info("finished sending for server", slog.String("ID", serverID))
+				}()
+
+				s.sendFileChunksToDownloadToChannel(ctx, fileID, serverID, fileChunksChan)
+			}(ctx, id, serverID, fileChunksChan)
+		}
+	}()
 
 	filepath := fmt.Sprintf("./downloads/%d", id)
 
@@ -78,10 +90,10 @@ func (s *Service) DownloadFile(ctx context.Context, id int64) (string, error) {
 		}
 	}(file)
 
-	wg1 := sync.WaitGroup{}
-	wg1.Add(1)
+	composeWG := sync.WaitGroup{}
+	composeWG.Add(1)
 	go func() {
-		defer wg1.Done()
+		defer composeWG.Done()
 		for downloadedFileChunk := range downloadedFileChunks {
 			byteBegin := downloadedFileChunk.ChunkSize * downloadedFileChunk.ChunkNumber
 			_, err = file.Seek(byteBegin, 0)
@@ -108,9 +120,10 @@ func (s *Service) DownloadFile(ctx context.Context, id int64) (string, error) {
 		}
 	}()
 
-	wg.Wait()
+	streamWG.Wait()
+	downloadWG.Wait()
 	close(downloadedFileChunks)
-	wg1.Wait()
+	composeWG.Wait()
 
 	return filepath, nil
 }
