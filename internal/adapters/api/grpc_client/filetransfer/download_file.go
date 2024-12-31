@@ -36,7 +36,7 @@ func (i *Implementation) DownloadFileChunks(ctx context.Context, fileChunks <-ch
 			})
 			if err != nil {
 				log.Error("failed to send file chunk", slog.String("UUID", fileChunk.UUID), sl.Err(err))
-				return
+				break
 			}
 		}
 		if err := stream.CloseSend(); err != nil {
