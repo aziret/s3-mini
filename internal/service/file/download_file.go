@@ -48,7 +48,6 @@ func (s *Service) DownloadFile(ctx context.Context, id int64) (string, error) {
 	go func() {
 		defer downloadWG.Done()
 		for _, serverID := range *serverIDs {
-			log.Info("started streaming for server", slog.String("ID", serverID))
 			workersChannel <- struct{}{}
 			workersChannel <- struct{}{}
 
@@ -57,19 +56,13 @@ func (s *Service) DownloadFile(ctx context.Context, id int64) (string, error) {
 			streamWG.Add(2)
 			go func(ctx context.Context, serverID string, fileChunksChan chan model.FileChunk) {
 				defer streamWG.Done()
-				defer func() {
-					<-workersChannel
-					log.Info("finished downloading for server", slog.String("ID", serverID))
-				}()
+				defer func() { <-workersChannel }()
 
 				s.downloadFileChunks(ctx, serverID, fileChunksChan, downloadedFileChunks)
 			}(ctx, serverID, fileChunksChan)
 			go func(ctx context.Context, fileID int64, serverID string, fileChunksChan chan model.FileChunk) {
 				defer streamWG.Done()
-				defer func() {
-					<-workersChannel
-					log.Info("finished sending for server", slog.String("ID", serverID))
-				}()
+				defer func() { <-workersChannel }()
 
 				s.sendFileChunksToDownloadToChannel(ctx, fileID, serverID, fileChunksChan)
 			}(ctx, id, serverID, fileChunksChan)
